@@ -3,12 +3,12 @@
 #ifndef SAFETYEVENT_H
 #define SAFETYEVENT_H
 
-#include <defs.h>
-#include <Log.h>
+#include "defs.h"
+#include "Log.h"
 
 class SafetyEvent{
   public:
-    SafetyEvent();
+    SafetyEvent(int, int);
     ~SafetyEvent();
     Log* act(int);
     int getEventType();

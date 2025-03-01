@@ -5,13 +5,13 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <defs.h>
+#include "defs.h"
 
 class Log{
   public:
-    Log();
+    Log(int, int, int);
     ~Log();
-    string displayLog();
+    void generateLog(QString&);
     int getAction();
 
   private:

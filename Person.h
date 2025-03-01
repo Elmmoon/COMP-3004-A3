@@ -3,19 +3,20 @@
 #ifndef PERSON_H
 #define PERSON_H
 
-#include <defs.h>
-#include <Log.h>
-#include <Entity.h>
+#include "defs.h"
+#include "Log.h"
+#include "Entity.h"
 
 
 class Person: public Entity{
   public:
-    Person();
+    Person(int, int);
     ~Person();
-    virtual vector<Log*> act(int, int);
+    virtual void act(int, int, QVector<Log*>&);
     int getDestFloorID();
     bool getHasRequested();
     void setDestFloorID(int); //useful for fire and power outage scenarios
+    static int nextID;
 
   private:
     int requestTime;

@@ -10,10 +10,23 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    Elevator.cpp \
+    Entity.cpp \
+    Floor.cpp \
+    Log.cpp \
+    Person.cpp \
+    SafetyEvent.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    defs.h \
+    Elevator.h \
+    Entity.h \
+    Floor.h \
+    Log.h \
+    Person.h \
+    SafetyEvent.h
 
 FORMS += \
     mainwindow.ui

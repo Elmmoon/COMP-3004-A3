@@ -5,7 +5,9 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
+#include <QString>
+#include <QVector>
+
 using namespace std;
 
 //Entity Types (Log.entityType)
@@ -25,7 +27,7 @@ using namespace std;
 
 //Actions (use for Entity.act() and Log.action)
 #define NOTHING     0
-#define HELP        1
+#define REMOVE_OBS  1
 #define DOOR_OPEN   2
 #define DOOR_CLOSE  3
 #define CALL        4
@@ -37,12 +39,11 @@ using namespace std;
 #define STALL       10
 #define ARRIVED     11
 #define WAIT        12
-#define REMOVE_OBS  13
 
 //Constant (miscellaneous definitions)
 #define CAPACITY  3
 #define UP        'U'
 #define DOWN      'D'
-#define LOOP_TIME 100
+#define LOOP_TIME 1000
 
 #endif
