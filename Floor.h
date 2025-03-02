@@ -5,14 +5,14 @@
 
 #include "defs.h"
 #include "Person.h"
+#include "Elevator.h"
 
-class Elevator;
 
 class Floor: public Entity{
   public:
     Floor(bool, Floor*);
     ~Floor();
-    virtual void act(int, int, QVector<Log*>&);
+    virtual bool act(int, QVector<Log*>&);
     Floor* getAbove();
     Floor* getBelow();
     bool getSafety();
@@ -21,15 +21,25 @@ class Floor: public Entity{
     void addElevator(Elevator*);
     void removePerson(int);
     void removeElevator(int);
-    static int nextID;
+    static void resetIDCounter();
     
   private:
+    static int nextID;
     bool safeFloor;              //for fire and power outage events
     Floor* floorAbove;           //useful so that elevators can move themselves
     Floor* floorBelow;
-    QVector<Elevator*> elevators;
-    QVector<Person*> persons;
-    void callElevator(char);     //sends request to elevator
+    bool requestUp;
+    bool requestDown;
+    void setRequestStatus(char, bool);
+    QVector<Elevator*> elevatorArr;
+    QVector<Person*> personArr;
+    bool callElevator(char);     //sends request to elevator
+    bool findElevator(char, int);
+    void respondToPerson(Person*, Log*);
+    void moveElevator(Floor*, Elevator*);
+    void managePersons(Elevator*);
+    void respondToElevator(Elevator*, Log*);
+    void respondToEvent(Log*);
 };
 
 #endif

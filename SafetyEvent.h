@@ -10,7 +10,7 @@ class SafetyEvent{
   public:
     SafetyEvent(int, int);
     ~SafetyEvent();
-    Log* act(int);
+    bool act(int, QVector<Log*>&);
     int getEventType();
     void setAsResolved();
 

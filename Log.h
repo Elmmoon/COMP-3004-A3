@@ -13,6 +13,7 @@ class Log{
     ~Log();
     void generateLog(QString&);
     int getAction();
+    int getType();
 
   private:
     int entityType;

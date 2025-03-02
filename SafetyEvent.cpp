@@ -9,8 +9,13 @@ SafetyEvent::SafetyEvent(int time, int type){
 
 SafetyEvent::~SafetyEvent(){}
 
-Log* SafetyEvent::act(int){
-    return new Log(0, 0, 0);
+bool SafetyEvent::act(int time, QVector<Log*>& log){
+    bool isActive = (time == targetTimeStep);
+
+    if (isActive)
+        log.push_back(new Log(EVENT, eventType, ACTIVE));
+
+    return isActive;
 }
 
 int SafetyEvent::getEventType(){

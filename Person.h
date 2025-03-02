@@ -10,17 +10,25 @@
 
 class Person: public Entity{
   public:
-    Person(int, int);
+    Person(int, int, int);
     ~Person();
-    virtual void act(int, int, QVector<Log*>&);
+    virtual bool act(int, QVector<Log*>&);
     int getDestFloorID();
-    bool getHasRequested();
     void setDestFloorID(int); //useful for fire and power outage scenarios
-    static int nextID;
+    int getCurFloorID();
+    void setCurFloorID(int);
+    int getRequestTime();
+    bool getHasRequested();
+    void setHasRequested(bool);
+    void setRequestTime(int);
+    bool hasArrived();
+    static void resetIDCounter();
 
   private:
+    static int nextID;
     int requestTime;
     bool hasRequested;
+    int curFloorID;
     int destFloorID;          //stores ID of floor to prevent circular reference
       
 };

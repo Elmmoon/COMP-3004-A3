@@ -7,6 +7,7 @@
 #include <string>
 #include <QString>
 #include <QVector>
+#include <QDebug>
 
 using namespace std;
 
@@ -27,23 +28,24 @@ using namespace std;
 
 //Actions (use for Entity.act() and Log.action)
 #define NOTHING     0
-#define REMOVE_OBS  1
-#define DOOR_OPEN   2
-#define DOOR_CLOSE  3
-#define CALL        4
-#define ENTER       5
-#define EXIT        6
-#define EVACUTE     7
-#define MOVE_UP     8
-#define MOVE_DOWN   9
-#define STALL       10
-#define ARRIVED     11
-#define WAIT        12
+#define CALL_UP     1
+#define CALL_DOWN   2
+#define MOVE_UP     3
+#define MOVE_DOWN   4
+#define REQUEST     5
+#define BOARDING    6
+#define REMOVE_OBS  7
+#define DOOR_OPEN   8
+#define DOOR_CLOSE  9
+#define EVACUTE     11
+#define ACTIVE      13
+
 
 //Constant (miscellaneous definitions)
-#define CAPACITY  3
+#define CAPACITY  10
 #define UP        'U'
 #define DOWN      'D'
+#define IDLE      'I'
 #define LOOP_TIME 1000
 
 #endif
