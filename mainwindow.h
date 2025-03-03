@@ -40,7 +40,7 @@ private slots:
     void enterLine();
     void clearArr();
     void executeTimeStep();    //increments time step and instructs all entities to act
-    void inputParam();         //input number of entities, their behaviour and events
+    void initParam();         //input number of entities, their behaviour and events
     void toggleOn(bool);       //pause or play simulation
     void endProgram();         //stop button
     void displayLogs(QVector<Log*>&);

@@ -46,6 +46,6 @@ using namespace std;
 #define UP        'U'
 #define DOWN      'D'
 #define IDLE      'I'
-#define LOOP_TIME 1000
+#define LOOP_TIME 1500
 
 #endif

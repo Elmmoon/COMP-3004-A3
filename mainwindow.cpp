@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->stopButton, SIGNAL(released()), this, SLOT(endProgram()));
     connect(ui->pauseButton, SIGNAL(released()), this, SLOT(pause()));
     connect(ui->playButton, SIGNAL(released()), this, SLOT(play()));
-    connect(ui->enterButton, SIGNAL(released()), this, SLOT(enterLine()));
+    //connect(ui->enterButton, SIGNAL(released()), this, SLOT(enterLine()));
     connect(timer, &QTimer::timeout, this, &MainWindow::executeTimeStep);
 
     isRunning = false;
@@ -30,7 +30,8 @@ void MainWindow::start(){
         isRunning = true;
         curTimeStep = 0;
         ui->output->clear();
-        inputParam();
+        initParam();
+        executeTimeStep();
         timer->start(LOOP_TIME);
     }
 }
@@ -55,13 +56,16 @@ void MainWindow::enterLine(){
 
 void MainWindow::executeTimeStep(){
     QVector<Log*> floorLogs;
+    bool generatedLog;
 
-    curTimeStep++;
+    ui->timerDisplay->setText(QString::number(++curTimeStep));
     ui->output->appendPlainText(QString("Time Step %1:").arg(curTimeStep));
     for (auto it : floorArr){
-        ui->output->appendPlainText(QString("   Floor %1:").arg(it->getEntityID()));
-        it->act(curTimeStep, floorLogs);
-        displayLogs(floorLogs);
+        generatedLog = it->act(curTimeStep, floorLogs);
+        if (generatedLog){
+            ui->output->appendPlainText(QString("   Floor %1:").arg(it->getEntityID()));
+            displayLogs(floorLogs);
+        }
         floorLogs.clear();
     }
     ui->output->appendPlainText("");
@@ -70,28 +74,55 @@ void MainWindow::executeTimeStep(){
         endProgram();
 }
 
-void MainWindow::inputParam(){
+void MainWindow::initParam(){
+    Floor* prevFloor;
+    int initialFloorID;
+    int requestTime;
+    int destFloorID;
+
+    //reset static id counters
     Elevator::resetIDCounter();
     Floor::resetIDCounter();
     Person::resetIDCounter();
 
+    //init base floor (safe floor)
     floorArr.push_back(new Floor(true, nullptr));
-    floorArr.push_back(new Floor(false, floorArr.front()));
-    floorArr.front()->setAbove(floorArr.at(1));
+    prevFloor = floorArr.front();
 
-    personArr.push_back(new Person(1, 1, 2));
-    personArr.push_back(new Person(1, 1, 2));
-    personArr.push_back(new Person(1, 2, 1));
+    //init other floors
+    for (int i = 1; i < 5; i++){
+        floorArr.push_back(new Floor(false, prevFloor));
+        prevFloor->setAbove(floorArr.back());
+        prevFloor = floorArr.back();
+    }
 
-    floorArr.front()->addPerson(personArr.front());
-    floorArr.front()->addPerson(personArr.at(1));
-    floorArr.at(1)->addPerson(personArr.at(2));
+    //init people from GUI inputs
+    initialFloorID = ui->personInitInput1->value();
+    requestTime = ui->personReqInput1->value();
+    destFloorID = ui->personTarInput1->value();
+    personArr.push_back(new Person(initialFloorID, requestTime, destFloorID));
+    floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
 
-    elevatorArr.push_back(new Elevator(2));
-    elevatorArr.push_back(new Elevator(2));
+    initialFloorID = ui->personInitInput2->value();
+    requestTime = ui->personReqInput2->value();
+    destFloorID = ui->personTarInput2->value();
+    personArr.push_back(new Person(initialFloorID, requestTime, destFloorID));
+    floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
 
-    floorArr.at(1)->addElevator(elevatorArr.at(0));
-    floorArr.at(1)->addElevator(elevatorArr.at(1));
+    initialFloorID = ui->personInitInput3->value();
+    requestTime = ui->personReqInput3->value();
+    destFloorID = ui->personTarInput3->value();
+    personArr.push_back(new Person(initialFloorID, requestTime, destFloorID));
+    floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
+
+    //init elevators
+    initialFloorID = ui->elevatorInput1->value();
+    elevatorArr.push_back(new Elevator(initialFloorID));
+    floorArr.at(initialFloorID - 1)->addElevator(elevatorArr.back());
+
+    initialFloorID = ui->elevatorInput2->value();
+    elevatorArr.push_back(new Elevator(initialFloorID));
+    floorArr.at(initialFloorID - 1)->addElevator(elevatorArr.back());
 }
 
 void MainWindow::toggleOn(bool){

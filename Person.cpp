@@ -2,7 +2,7 @@
 
 int Person::nextID = 1;
 
-Person::Person(int time, int curFloor, int destFloor) : Entity (nextID++){
+Person::Person(int curFloor, int time, int destFloor) : Entity (nextID++){
     requestTime = time;
     destFloorID = destFloor;
     curFloorID = curFloor;
