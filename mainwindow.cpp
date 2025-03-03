@@ -63,7 +63,7 @@ void MainWindow::executeTimeStep(){
     for (auto it : floorArr){
         generatedLog = it->act(curTimeStep, floorLogs);
         if (generatedLog){
-            ui->output->appendPlainText(QString("   Floor %1:").arg(it->getEntityID()));
+            ui->output->appendPlainText(QString("   Floor %1:").arg(it->getFloorID()));
             displayLogs(floorLogs);
         }
         floorLogs.clear();
@@ -80,18 +80,14 @@ void MainWindow::initParam(){
     int requestTime;
     int destFloorID;
 
-    //reset static id counters
-    Elevator::resetIDCounter();
-    Floor::resetIDCounter();
-    Person::resetIDCounter();
 
     //init base floor (safe floor)
-    floorArr.push_back(new Floor(true, nullptr));
+    floorArr.push_back(new Floor(1, true, nullptr));
     prevFloor = floorArr.front();
 
     //init other floors
-    for (int i = 1; i < 5; i++){
-        floorArr.push_back(new Floor(false, prevFloor));
+    for (int i = 2; i <= 5; i++){
+        floorArr.push_back(new Floor(i, false, prevFloor));
         prevFloor->setAbove(floorArr.back());
         prevFloor = floorArr.back();
     }
@@ -100,28 +96,28 @@ void MainWindow::initParam(){
     initialFloorID = ui->personInitInput1->value();
     requestTime = ui->personReqInput1->value();
     destFloorID = ui->personTarInput1->value();
-    personArr.push_back(new Person(initialFloorID, requestTime, destFloorID));
+    personArr.push_back(new Person(1, initialFloorID, requestTime, destFloorID));
     floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
 
     initialFloorID = ui->personInitInput2->value();
     requestTime = ui->personReqInput2->value();
     destFloorID = ui->personTarInput2->value();
-    personArr.push_back(new Person(initialFloorID, requestTime, destFloorID));
+    personArr.push_back(new Person(2, initialFloorID, requestTime, destFloorID));
     floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
 
     initialFloorID = ui->personInitInput3->value();
     requestTime = ui->personReqInput3->value();
     destFloorID = ui->personTarInput3->value();
-    personArr.push_back(new Person(initialFloorID, requestTime, destFloorID));
+    personArr.push_back(new Person(3, initialFloorID, requestTime, destFloorID));
     floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
 
     //init elevators
     initialFloorID = ui->elevatorInput1->value();
-    elevatorArr.push_back(new Elevator(initialFloorID));
+    elevatorArr.push_back(new Elevator(1, initialFloorID));
     floorArr.at(initialFloorID - 1)->addElevator(elevatorArr.back());
 
     initialFloorID = ui->elevatorInput2->value();
-    elevatorArr.push_back(new Elevator(initialFloorID));
+    elevatorArr.push_back(new Elevator(2, initialFloorID));
     floorArr.at(initialFloorID - 1)->addElevator(elevatorArr.back());
 }
 
@@ -154,13 +150,11 @@ void MainWindow::clearArr(){
         delete *it;
     for (auto it = elevatorArr.begin(); it != elevatorArr.end(); ++it)
         delete *it;
-    for (auto it = safetyEventArr.begin(); it != safetyEventArr.end(); ++it)
-        delete *it;
 
     personArr.clear();
     floorArr.clear();
     elevatorArr.clear();
-    safetyEventArr.clear();
+    eventQueue.clear();
 }
 
 void MainWindow::displayLogs(QVector<Log*>& log){

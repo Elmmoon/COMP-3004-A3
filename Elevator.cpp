@@ -1,9 +1,9 @@
 #include "defs.h"
 #include "Elevator.h"
 
-int Elevator::nextID = 1;
-
-Elevator::Elevator(int floorID) : Entity (nextID++){
+Elevator::Elevator(int id, int floorID){
+    elevatorID = id;
+    lastTimeStep = 0;
     direction = IDLE;
     curFloorID = floorID;
 }
@@ -36,7 +36,7 @@ bool Elevator::act(int time, QVector<Log*>& log){
             action = MOVE_UP;
     }
     if (action != NOTHING){
-        log.push_back(new Log(ELEVATOR, entityID, action));
+        log.push_back(new Log(ELEVATOR, elevatorID, action));
     }
 
     return (log.size() - logLength > 0);
@@ -147,9 +147,5 @@ void Elevator::disembark(QVector<Person *>& disembarking){
 
 void Elevator::addPassenger(Person* person){
     passengers.push_back(person);
-}
-
-void Elevator::resetIDCounter(){
-    nextID = 1;
 }
 

@@ -1,9 +1,8 @@
 #include "defs.h"
 #include "Floor.h"
 
-int Floor::nextID = 1;
-
-Floor::Floor(bool safe, Floor* below) : Entity (nextID++){
+Floor::Floor(int id, bool safe, Floor* below){
+    floorID = id;
     safeFloor = safe;
     floorBelow = below;
     floorAbove = nullptr;
@@ -46,7 +45,7 @@ bool Floor::getSafety(){
 
 void Floor::addPerson(Person* person){
     personArr.push_back(person);
-    person->setCurFloorID(entityID);
+    person->setCurFloorID(floorID);
 }
 
 void Floor::addElevator(Elevator* elevator){
@@ -71,13 +70,13 @@ bool Floor::callElevator(char direction){
     Floor* above = floorAbove;
     Floor* below = floorBelow;
 
-    found = findElevator(direction, entityID);
+    found = findElevator(direction, floorID);
 
     while (!found){
         if (!above and !below)
             break;
         if (above){
-            found = above->findElevator(direction, entityID);
+            found = above->findElevator(direction, floorID);
             if (found){
                 break;
             }
@@ -85,7 +84,7 @@ bool Floor::callElevator(char direction){
                 above = above->getAbove();
         }
         if (below){
-            found = below->findElevator(direction, entityID);
+            found = below->findElevator(direction, floorID);
             if (found)
                 break;
             else
@@ -190,10 +189,10 @@ void Floor::moveElevator(Floor* floor, Elevator* elevator){
     idx = elevatorArr.indexOf(elevator);
     elevatorArr.erase(elevatorArr.begin() + idx);
     floor->addElevator(elevator);
-    elevator->setCurFloorID(floor->getEntityID());
+    elevator->setCurFloorID(floor->getFloorID());
 
 }
 
-void Floor::resetIDCounter(){
-    nextID = 1;
+int Floor::getFloorID(){
+    return floorID;
 }

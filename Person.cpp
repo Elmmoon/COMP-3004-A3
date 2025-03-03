@@ -1,8 +1,8 @@
 #include "Person.h"
 
-int Person::nextID = 1;
-
-Person::Person(int curFloor, int time, int destFloor) : Entity (nextID++){
+Person::Person(int id, int curFloor, int time, int destFloor){
+    personID = id;
+    lastTimeStep = 0;
     requestTime = time;
     destFloorID = destFloor;
     curFloorID = curFloor;
@@ -19,8 +19,6 @@ bool Person::act(int time, QVector<Log*>& log){
         return false;
 
     logLength = log.size();
-
-    //event check
 
     if (!hasRequested){
         if (curFloorID > 0){
@@ -39,7 +37,7 @@ bool Person::act(int time, QVector<Log*>& log){
 
         lastTimeStep++;
         if (action != NOTHING)
-            log.push_back(new Log(PERSON, entityID, action));
+            log.push_back(new Log(PERSON, personID, action));
     }
 
     return (log.size() - logLength > 0);
@@ -81,6 +79,3 @@ void Person::setHasRequested(bool val){
     hasRequested = val;
 }
 
-void Person::resetIDCounter(){
-    nextID = 1;
-}

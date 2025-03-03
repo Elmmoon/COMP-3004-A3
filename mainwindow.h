@@ -6,10 +6,8 @@
 
 #include "defs.h"
 #include "Elevator.h"
-#include "Entity.h"
 #include "Floor.h"
 #include "Person.h"
-#include "SafetyEvent.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -31,7 +29,7 @@ private:
     QVector<Person*> personArr;
     QVector<Floor*> floorArr;
     QVector<Elevator*> elevatorArr;
-    QVector<SafetyEvent*> safetyEventArr;
+    QVector<int> eventQueue;
 
 private slots:
     void start();

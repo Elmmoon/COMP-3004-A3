@@ -12,21 +12,17 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     Elevator.cpp \
-    Entity.cpp \
     Floor.cpp \
     Log.cpp \
-    Person.cpp \
-    SafetyEvent.cpp
+    Person.cpp
 
 HEADERS += \
     mainwindow.h \
     defs.h \
     Elevator.h \
-    Entity.h \
     Floor.h \
     Log.h \
-    Person.h \
-    SafetyEvent.h
+    Person.h
 
 FORMS += \
     mainwindow.ui

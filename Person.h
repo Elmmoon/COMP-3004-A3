@@ -5,14 +5,13 @@
 
 #include "defs.h"
 #include "Log.h"
-#include "Entity.h"
 
 
-class Person: public Entity{
+class Person{
   public:
-    Person(int, int, int);
+    Person(int, int, int, int);
     ~Person();
-    virtual bool act(int, QVector<Log*>&);
+    bool act(int, QVector<Log*>&);
     int getDestFloorID();
     void setDestFloorID(int); //useful for fire and power outage scenarios
     int getCurFloorID();
@@ -25,7 +24,8 @@ class Person: public Entity{
     static void resetIDCounter();
 
   private:
-    static int nextID;
+    int lastTimeStep;
+    int personID;
     int requestTime;
     bool hasRequested;
     int curFloorID;

@@ -8,9 +8,9 @@
 #include "Elevator.h"
 
 
-class Floor: public Entity{
+class Floor{
   public:
-    Floor(bool, Floor*);
+    Floor(int, bool, Floor*);
     ~Floor();
     virtual bool act(int, QVector<Log*>&);
     Floor* getAbove();
@@ -21,10 +21,11 @@ class Floor: public Entity{
     void addElevator(Elevator*);
     void removePerson(int);
     void removeElevator(int);
-    static void resetIDCounter();
+    void addEvent(int);
+    int getFloorID();
     
   private:
-    static int nextID;
+    int floorID;
     bool safeFloor;              //for fire and power outage events
     Floor* floorAbove;           //useful so that elevators can move themselves
     Floor* floorBelow;
@@ -33,6 +34,8 @@ class Floor: public Entity{
     void setRequestStatus(char, bool);
     QVector<Elevator*> elevatorArr;
     QVector<Person*> personArr;
+    QVector<int> eventArr;
+    QVector<Log*> logArr;
     bool callElevator(char);     //sends request to elevator
     bool findElevator(char, int);
     void respondToPerson(Person*, Log*);

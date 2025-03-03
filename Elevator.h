@@ -5,14 +5,13 @@
 
 #include "defs.h"
 #include "Log.h"
-#include "Entity.h"
 #include "Person.h"
 
-class Elevator: public Entity{
+class Elevator{
   public:
-    Elevator(int);
+    Elevator(int, int);
     ~Elevator();
-    virtual bool act(int, QVector<Log*>&);
+    bool act(int, QVector<Log*>&);
     char getDirection();
     void setDirection(char);
     int getCurFloorID();
@@ -22,12 +21,15 @@ class Elevator: public Entity{
     void disembark(QVector<Person*>&);
     static char determineDirection(int, int);
     static void resetIDCounter();
+    void addEvent(int);
 
   private:
-    static int nextID;
     char direction;
+    int elevatorID;
+    int lastTimeStep;
     int curFloorID;
     QVector <Person*> passengers;
+    QVector<int> eventArr;
     QVector <int> queue;          //queue of floor IDs
     void evacuate(int);             //move to safe floor if fire or power outage
     void addtoQueue(int, bool);
