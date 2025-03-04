@@ -276,7 +276,7 @@ Floor</string>
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>99</number>
+           <number>5</number>
           </property>
          </widget>
         </item>
@@ -286,7 +286,7 @@ Floor</string>
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>99</number>
+           <number>5</number>
           </property>
          </widget>
         </item>
@@ -296,7 +296,7 @@ Floor</string>
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>99</number>
+           <number>5</number>
           </property>
          </widget>
         </item>
@@ -330,7 +330,7 @@ Floor</string>
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>99</number>
+           <number>5</number>
           </property>
          </widget>
         </item>
@@ -367,7 +367,7 @@ Floor</string>
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>99</number>
+           <number>5</number>
           </property>
          </widget>
         </item>
@@ -394,7 +394,7 @@ Time</string>
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>99</number>
+           <number>5</number>
           </property>
          </widget>
         </item>
@@ -479,7 +479,7 @@ Floor</string>
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>99</number>
+           <number>5</number>
           </property>
          </widget>
         </item>
@@ -489,7 +489,7 @@ Floor</string>
            <number>1</number>
           </property>
           <property name="maximum">
-           <number>99</number>
+           <number>5</number>
           </property>
          </widget>
         </item>

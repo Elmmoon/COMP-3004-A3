@@ -9,16 +9,20 @@
 
 class Log{
   public:
-    Log(int, int, int);
+    Log(int, int, int, char);
     ~Log();
-    void generateLog(QString&);
+    QString generateLog();
+    int getID();
     int getAction();
-    int getType();
+    int getDirection();
+    void setDirection(char);
+    static void clearLogs(QVector<Log*>&);
 
   private:
-    int entityType;
-    int entityID;
+    int elevatorID;
     int action;
+    int floorID;
+    char direction;
 };
 
 #endif

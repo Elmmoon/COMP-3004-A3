@@ -1,30 +1,49 @@
 #include "defs.h"
 #include "log.h"
 
-Log::Log(int type, int id, int act){
-    entityType = type;
-    entityID = id;
+Log::Log(int id, int act, int floor, char dir){
+    elevatorID = id;
     action = act;
+    floorID = floor;
+    direction = dir;
 }
 Log::~Log(){}
 
-void Log::generateLog(QString& str){
-    str.append("      ");
-    switch (entityType){
-        case PERSON:
-            str.append("Person #");
+QString Log::generateLog(){
+    QString str("           ");
+    QString directionString;
+
+    if (direction == UP)
+        directionString = "up";
+    else
+        directionString = "down";
+
+    switch (action){
+        case CALL:
+            str.append(QString("Received a request %1 from floor %2").arg(directionString).arg(floorID));
             break;
-        case ELEVATOR:
-            str.append("Elevator #");
+        case REQUEST:
+            str.append(QString("A passenger has requested a stop to floor %1").arg(floorID));
+            break;
+        case BOARDING:
+            str.append(QString("Opens its doors, rings a bell, allows passengers to move and then close its doors"));
+            break;
+        case MOVE:
+            str.append(QString("Moved %1 to floor %2").arg(directionString).arg(floorID));
             break;
     }
-    str.append(QString("%1 action: %2").arg(entityID).arg(action));
+
+    return str;
 }
 
-int Log::getAction(){
-    return action;
+void Log::clearLogs(QVector<Log*>& logs){
+    for (auto it : logs)
+        delete it;
+    logs.clear();
 }
 
-int Log::getType(){
-    return entityType;
-}
+//getters
+int Log::getAction(){ return action; }
+int Log::getID(){ return elevatorID; }
+int Log::getDirection(){ return direction;}
+void Log::setDirection(char dir){ direction =  dir; }

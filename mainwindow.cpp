@@ -29,9 +29,9 @@ void MainWindow::start(){
     if (!isRunning){
         isRunning = true;
         curTimeStep = 0;
-        ui->output->clear();
+        ui->timerDisplay->clear();
+        ui->output->setPlainText("Simulation Started\n");
         initParam();
-        executeTimeStep();
         timer->start(LOOP_TIME);
     }
 }
@@ -55,11 +55,20 @@ void MainWindow::enterLine(){
 }
 
 void MainWindow::executeTimeStep(){
-    QVector<Log*> floorLogs;
-    bool generatedLog;
+    QVector<QString> floorLogs;
 
     ui->timerDisplay->setText(QString::number(++curTimeStep));
     ui->output->appendPlainText(QString("Time Step %1:").arg(curTimeStep));
+    for (auto it : floorArr)
+        it->checkEvent();
+    for (auto it : floorArr)
+        it->checkPerson(curTimeStep);
+    for (auto it : floorArr)
+        it->checkElevator(curTimeStep);
+    for (auto it : floorArr)
+        displayLogs(it);
+;    //check log generation
+    /*
     for (auto it : floorArr){
         generatedLog = it->act(curTimeStep, floorLogs);
         if (generatedLog){
@@ -67,7 +76,8 @@ void MainWindow::executeTimeStep(){
             displayLogs(floorLogs);
         }
         floorLogs.clear();
-    }
+    }    if (!isRunning){
+*/
     ui->output->appendPlainText("");
 
     if (allPassengersArrived())
@@ -96,19 +106,19 @@ void MainWindow::initParam(){
     initialFloorID = ui->personInitInput1->value();
     requestTime = ui->personReqInput1->value();
     destFloorID = ui->personTarInput1->value();
-    personArr.push_back(new Person(1, initialFloorID, requestTime, destFloorID));
+    personArr.push_back(new Person(1, initialFloorID, destFloorID, requestTime));
     floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
 
     initialFloorID = ui->personInitInput2->value();
     requestTime = ui->personReqInput2->value();
     destFloorID = ui->personTarInput2->value();
-    personArr.push_back(new Person(2, initialFloorID, requestTime, destFloorID));
+    personArr.push_back(new Person(2, initialFloorID, destFloorID, requestTime));
     floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
 
     initialFloorID = ui->personInitInput3->value();
     requestTime = ui->personReqInput3->value();
     destFloorID = ui->personTarInput3->value();
-    personArr.push_back(new Person(3, initialFloorID, requestTime, destFloorID));
+    personArr.push_back(new Person(3, initialFloorID, destFloorID, requestTime));
     floorArr.at(initialFloorID - 1)->addPerson(personArr.back());
 
     //init elevators
@@ -157,16 +167,23 @@ void MainWindow::clearArr(){
     eventQueue.clear();
 }
 
-void MainWindow::displayLogs(QVector<Log*>& log){
-    QString qstr;
-    for (auto it : log){
-        qstr.clear();
-        it->generateLog(qstr);
-        ui->output->appendPlainText(qstr);
-        delete it;
-    }
-    log.clear();
+void MainWindow::displayLogs(Floor* floor){
+    QVector<Log*>* logs = floor->getLogs();
+    int lastID = 0;
 
+    if (logs->size() > 0){
+        ui->output->appendPlainText(QString("   Floor %1:").arg(floor->getFloorID()));
+        for (auto it : *logs){
+            if (it->getID() != lastID){
+                ui->output->appendPlainText(QString("       Elevator %1:").arg(it->getID()));
+                lastID = it->getID();
+            }
+            ui->output->appendPlainText(it->generateLog());
+            delete it;
+        }
+    }
+
+    logs->clear();
 }
 
 bool MainWindow::allPassengersArrived(){

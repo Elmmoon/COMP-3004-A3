@@ -12,7 +12,6 @@ class Floor{
   public:
     Floor(int, bool, Floor*);
     ~Floor();
-    virtual bool act(int, QVector<Log*>&);
     Floor* getAbove();
     Floor* getBelow();
     bool getSafety();
@@ -23,6 +22,10 @@ class Floor{
     void removeElevator(int);
     void addEvent(int);
     int getFloorID();
+    void checkEvent();
+    void checkPerson(int);
+    void checkElevator(int);
+    QVector<Log*>* getLogs();
     
   private:
     int floorID;
@@ -31,18 +34,19 @@ class Floor{
     Floor* floorBelow;
     bool requestUp;
     bool requestDown;
-    void setRequestStatus(char, bool);
     QVector<Elevator*> elevatorArr;
     QVector<Person*> personArr;
     QVector<int> eventArr;
     QVector<Log*> logArr;
     bool callElevator(char);     //sends request to elevator
     bool findElevator(char, int);
-    void respondToPerson(Person*, Log*);
+    void respondToPerson(Person*, int);
     void moveElevator(Floor*, Elevator*);
-    void managePersons(Elevator*);
+    void managePersons(Elevator*, char);
     void respondToElevator(Elevator*, Log*);
     void respondToEvent(Log*);
+    void insertLogs(QVector<Log*>&);
+    void insertLog(Log*);
 };
 
 #endif

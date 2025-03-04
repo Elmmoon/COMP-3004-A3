@@ -4,33 +4,29 @@
 #define PERSON_H
 
 #include "defs.h"
-#include "Log.h"
 
 
 class Person{
   public:
     Person(int, int, int, int);
     ~Person();
-    bool act(int, QVector<Log*>&);
-    int getDestFloorID();
-    void setDestFloorID(int); //useful for fire and power outage scenarios
+    int act(int);
+    bool hasArrived();
     int getCurFloorID();
-    void setCurFloorID(int);
+    int getDestFloorID();
     int getRequestTime();
     bool getHasRequested();
-    void setHasRequested(bool);
+    void setCurFloorID(int);
+    void setDestFloorID(int); //useful for fire and power outage scenarios
     void setRequestTime(int);
-    bool hasArrived();
-    static void resetIDCounter();
+    void setHasRequested(bool);
 
   private:
-    int lastTimeStep;
     int personID;
+    int curFloorID; //stores ID of floor to prevent circular reference
+    int destFloorID;
     int requestTime;
     bool hasRequested;
-    int curFloorID;
-    int destFloorID;          //stores ID of floor to prevent circular reference
-      
 };
 
 #endif

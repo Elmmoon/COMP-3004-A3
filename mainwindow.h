@@ -41,7 +41,7 @@ private slots:
     void initParam();         //input number of entities, their behaviour and events
     void toggleOn(bool);       //pause or play simulation
     void endProgram();         //stop button
-    void displayLogs(QVector<Log*>&);
+    void displayLogs(Floor*);
     bool allPassengersArrived();
 };
 #endif // MAINWINDOW_H

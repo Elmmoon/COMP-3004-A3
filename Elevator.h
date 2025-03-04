@@ -11,29 +11,34 @@ class Elevator{
   public:
     Elevator(int, int);
     ~Elevator();
-    bool act(int, QVector<Log*>&);
+    bool act(int);
+    void disembark(QVector<Person*>&);
+    static char determineDirection(int, int);   
     char getDirection();
-    void setDirection(char);
+    char getRequestDirection();
     int getCurFloorID();
+    QVector<Log*>* getLogs();
+    int getElevatorID();
+    void setDirection(char);
     void setCurFloorID(int);
     bool addFloorRequest(char, int);
     void addPassenger(Person*);
-    void disembark(QVector<Person*>&);
-    static char determineDirection(int, int);
-    static void resetIDCounter();
     void addEvent(int);
 
   private:
-    char direction;
+
     int elevatorID;
     int lastTimeStep;
+    char direction;
+    char requestDirection;
     int curFloorID;
-    QVector <Person*> passengers;
+    QVector<Person*> passengers;
     QVector<int> eventArr;
-    QVector <int> queue;          //queue of floor IDs
+    QVector<int> queue;          //queue of floor IDs
+    QVector<Log*> logArr;
     void evacuate(int);             //move to safe floor if fire or power outage
-    void addtoQueue(int, bool);
-    void respondToPerson(Person*, Log*);
+    bool addtoQueue(int, bool);
+    Log* respondToPerson(Person*, int);
 
 };
 
