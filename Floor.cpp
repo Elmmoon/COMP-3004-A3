@@ -1,9 +1,8 @@
 #include "defs.h"
 #include "Floor.h"
 
-Floor::Floor(int id, bool safe, Floor* below){
+Floor::Floor(int id, Floor* below){
     floorID = id;
-    safeFloor = safe;
     floorBelow = below;
     floorAbove = nullptr;
     requestDown = false;
@@ -16,6 +15,17 @@ Floor::~Floor(){
 
 void Floor::checkEvent(){
     Log::clearLogs(logArr);
+
+    for (auto it : eventArr){
+        if (it->getEventType() == FIRE || it->getEventType() == POWER){
+            for (auto itx : elevatorArr)
+                itx->evacuate();
+            for (auto itx : personArr){
+                itx->setDestFloorID(floorID);
+                itx->setHasRequested(false);
+            }
+        }
+    }
 }
 
 void Floor::checkPerson(int time){
@@ -36,12 +46,10 @@ void Floor::checkElevator(int time){
         if (logGenerated){
             elevatorLogs = it->getLogs();
             respondToElevator(it, elevatorLogs->back());
-            insertLogs(*elevatorLogs);
+            insertLogArr(*elevatorLogs);
         }
     }
-
 }
-
 
 void Floor::addPerson(Person* person){
     personArr.push_back(person);
@@ -65,11 +73,14 @@ bool Floor::callElevator(char direction){
     Floor* above = floorAbove;
     Floor* below = floorBelow;
 
+    //find elevators on current floor
     found = findElevator(direction, floorID);
 
     while (!found){
+        //no more floors to check
         if (!above and !below)
             break;
+        //check floor above
         if (above){
             found = above->findElevator(direction, floorID);
             if (found){
@@ -78,6 +89,7 @@ bool Floor::callElevator(char direction){
             else
                 above = above->getAbove();
         }
+        //check floor below
         if (below){
             found = below->findElevator(direction, floorID);
             if (found)
@@ -92,10 +104,11 @@ bool Floor::callElevator(char direction){
 
 bool Floor::findElevator(char direction, int floorID){
     bool found = false;
-    for (auto it = elevatorArr.begin(); it != elevatorArr.end(); ++it){
-        found = (*it)->addFloorRequest(direction, floorID);
+    //check all elevators on floor
+    for (auto it : elevatorArr){
+        found = it->addFloorRequest(direction, floorID);
         if (found){
-            insertLog(new Log((*it)->getElevatorID(), CALL, floorID, direction));
+            insertLog(new Log(it->getElevatorID(), CALL, floorID, direction));
             break;
         }
     }
@@ -107,11 +120,13 @@ void Floor::respondToPerson(Person* person, int action){
     bool found;
     char direction;
 
+    //request an elevator
     if (action == CALL){
         direction = Elevator::determineDirection(person->getCurFloorID(), person->getDestFloorID());
 
         switch (direction){
             case UP:
+                //make sure request isn't already made
                 if (!requestUp){
                     found = callElevator(UP);
                     if (found)
@@ -121,6 +136,7 @@ void Floor::respondToPerson(Person* person, int action){
                }
                 break;
             case DOWN:
+                //make sure request isn't already made
                 if (!requestDown){
                    found = callElevator(DOWN);
                    if (found)
@@ -137,9 +153,11 @@ void Floor::respondToPerson(Person* person, int action){
 void Floor::respondToElevator(Elevator* elevator, Log* log){
 
     switch (log->getAction()){
+
         case BOARDING:
+            //move people in and out
             managePersons(elevator, log->getDirection());
-            if (log->getDirection() == DOWN)
+            if (log->getDirection() == UP)
                 requestUp = false;
             else if (log->getDirection() == DOWN)
                 requestDown = false;
@@ -153,20 +171,15 @@ void Floor::respondToElevator(Elevator* elevator, Log* log){
     }
 }
 
-void Floor::respondToEvent(Log* log){
-
-}
-
-
-
 void Floor::managePersons(Elevator* elevator, char elevatorDirection){
     char direction;
     QVector<Person*> disembarking;
 
     for (auto it = personArr.begin(); it != personArr.end(); ++it){
-
+        //only move people that have made requests
         if ((*it)->getHasRequested()){
             direction = Elevator::determineDirection((*it)->getCurFloorID(), (*it)->getDestFloorID());
+            //move people that going in the same direction
             if (direction == elevatorDirection || elevatorDirection == IDLE){
                 elevator->addPassenger(*it);
                 (*it)->setCurFloorID(0);
@@ -177,8 +190,8 @@ void Floor::managePersons(Elevator* elevator, char elevatorDirection){
     }
 
     elevator->disembark(disembarking);
-    for (auto it = disembarking.begin(); it != disembarking.end(); ++it)
-        personArr.push_back(*it);
+    for (auto it : disembarking)
+        personArr.push_back(it);
 
 }
 
@@ -192,7 +205,7 @@ void Floor::moveElevator(Floor* floor, Elevator* elevator){
 
 }
 
-void Floor::insertLogs(QVector<Log *>& logs){
+void Floor::insertLogArr(QVector<Log *>& logs){
     int i;
 
     for (i = 0; i < logArr.size(); i++){
@@ -208,14 +221,17 @@ void Floor::insertLogs(QVector<Log *>& logs){
 void Floor::insertLog(Log* log){
     QVector<Log*> logs;
     logs.push_back(log);
-    insertLogs(logs);
+    insertLogArr(logs);
+}
+
+void Floor::addEvent(SafetyEvent* event){
+    eventArr.push_back(event);
 }
 
 //getters and setters
 int Floor::getFloorID(){ return floorID; }
 Floor* Floor::getAbove(){ return floorAbove; }
 Floor* Floor::getBelow(){ return floorBelow; }
-bool Floor::getSafety(){ return safeFloor; }
 QVector<Log*>* Floor::getLogs(){ return &logArr; }
 void Floor::setAbove(Floor* floor){ floorAbove = floor; }
 

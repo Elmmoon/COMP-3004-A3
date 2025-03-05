@@ -10,17 +10,16 @@
 
 class Floor{
   public:
-    Floor(int, bool, Floor*);
+    Floor(int, Floor*);
     ~Floor();
     Floor* getAbove();
     Floor* getBelow();
-    bool getSafety();
     void setAbove(Floor*);
     void addPerson(Person*);
     void addElevator(Elevator*);
     void removePerson(int);
     void removeElevator(int);
-    void addEvent(int);
+    void addEvent(SafetyEvent*);
     int getFloorID();
     void checkEvent();
     void checkPerson(int);
@@ -29,14 +28,13 @@ class Floor{
     
   private:
     int floorID;
-    bool safeFloor;              //for fire and power outage events
     Floor* floorAbove;           //useful so that elevators can move themselves
     Floor* floorBelow;
     bool requestUp;
     bool requestDown;
     QVector<Elevator*> elevatorArr;
     QVector<Person*> personArr;
-    QVector<int> eventArr;
+    QVector<SafetyEvent*> eventArr;
     QVector<Log*> logArr;
     bool callElevator(char);     //sends request to elevator
     bool findElevator(char, int);
@@ -44,8 +42,7 @@ class Floor{
     void moveElevator(Floor*, Elevator*);
     void managePersons(Elevator*, char);
     void respondToElevator(Elevator*, Log*);
-    void respondToEvent(Log*);
-    void insertLogs(QVector<Log*>&);
+    void insertLogArr(QVector<Log*>&);
     void insertLog(Log*);
 };
 

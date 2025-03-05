@@ -8,6 +8,7 @@
 #include "Elevator.h"
 #include "Floor.h"
 #include "Person.h"
+#include "safetyEvent.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,7 +30,10 @@ private:
     QVector<Person*> personArr;
     QVector<Floor*> floorArr;
     QVector<Elevator*> elevatorArr;
-    QVector<int> eventQueue;
+    QVector<SafetyEvent*> eventQueue;
+    QVector<Log*> eventLogArr;
+    void addEventToQueue(int, int);
+    void distributeEvent(SafetyEvent*);
 
 private slots:
     void start();
@@ -39,9 +43,16 @@ private slots:
     void clearArr();
     void executeTimeStep();    //increments time step and instructs all entities to act
     void initParam();         //input number of entities, their behaviour and events
-    void toggleOn(bool);       //pause or play simulation
     void endProgram();         //stop button
     void displayLogs(Floor*);
     bool allPassengersArrived();
+    void addCloseEvent();
+    void addOpenEvent();
+    void addHelpEvent();
+    void addOverloadEvent();
+    void addObstacleEvent();
+    void addFireEvent();
+    void addPowerEvent();
+
 };
 #endif // MAINWINDOW_H

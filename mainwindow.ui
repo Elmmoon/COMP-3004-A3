@@ -24,7 +24,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QPlainTextEdit" name="output">
+       <widget class="QPlainTextEdit" name="logDisplay">
         <property name="undoRedoEnabled">
          <bool>false</bool>
         </property>

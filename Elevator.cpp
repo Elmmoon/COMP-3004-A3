@@ -7,6 +7,7 @@ Elevator::Elevator(int id, int floorID){
     direction = IDLE;
     requestDirection = IDLE;
     curFloorID = floorID;
+    lastAction = NOTHING;
 }
 
 Elevator::~Elevator(){
@@ -18,7 +19,6 @@ bool Elevator::act(int time){
     int floorID;
     char actionDirection;
     int personAction;
-    Log* log = nullptr;
 
     //skip if already acted
     if (time == lastTimeStep)
@@ -27,18 +27,24 @@ bool Elevator::act(int time){
     floorID = curFloorID;
     lastTimeStep++;
 
+    for (auto it : eventArr)
+        respondToEvent(it);
+
+    eventArr.clear();
+
     //allow passengers to first make requests
-    for (auto it: passengers){
+    for (auto it : passengers){
         personAction = it->act(time);
-        log = respondToPerson(it, personAction);
-        if (log)
-            logArr.push_back(log);
+        respondToPerson(it, personAction);
     }
 
     actionDirection = direction;
 
+    //door open
+    if (isLastActionEvent())
+        action = BOARDING;
     //board passengers if arrived
-    if (!queue.isEmpty() && curFloorID == queue.front()){
+    else if (!queue.isEmpty() && curFloorID == queue.front()){
         action = BOARDING;
         queue.pop_front();
         if (queue.size() == 0){
@@ -57,9 +63,9 @@ bool Elevator::act(int time){
         }
     }
 
-    if (action != NOTHING){
+    if (action != NOTHING)
         logArr.push_back(new Log(elevatorID, action, floorID, actionDirection));
-    }
+    setLastAction(action);
 
     //did any actions occur
     return (action != NOTHING);
@@ -82,16 +88,22 @@ char Elevator::determineDirection(int curFloor, int destFloor){
     return dir;
 }
 
-void Elevator::evacuate(int safeFloor){
+void Elevator::evacuate(){
     queue.clear();
-    queue.push_back(safeFloor);
-    direction = determineDirection(curFloorID, safeFloor);
-    for (auto it : passengers)
-        it->setDestFloorID(safeFloor);
+    if (!passengers.empty()){
+        queue.push_back(SAFE_FLOOR);
+        direction = determineDirection(curFloorID, queue.front());
+    }
+    else
+        direction = IDLE;
+    for (auto it : passengers){
+        it->setDestFloorID(SAFE_FLOOR);
+        it->setHasRequested(true);
+    }
+    lastAction = EVACUATE;
 }
 
-Log* Elevator::respondToPerson(Person* person, int action){
-    Log* log = nullptr;
+void Elevator::respondToPerson(Person* person, int action){
     bool accepted;
 
     if (action == REQUEST){
@@ -101,11 +113,43 @@ Log* Elevator::respondToPerson(Person* person, int action){
                 requestDirection = IDLE;
                 direction = determineDirection(curFloorID, queue.front());
             }
-            log = new Log(elevatorID, REQUEST, person->getDestFloorID(), direction);
+            logArr.push_back(new Log(elevatorID, REQUEST, person->getDestFloorID(), direction));
         }
     }
 
-    return log;
+}
+
+void Elevator::respondToEvent(SafetyEvent* event){
+    Log* log = nullptr;
+
+    if (passengers.empty())
+        return;
+
+    switch (event->getEventType()){
+        case OVERLOAD:
+        case OPEN:
+        case OBSTACLE:
+            if (lastAction == BOARDING){
+                log = new Log(elevatorID, event->getEventType(), NOTHING, IDLE);
+                setLastAction(event->getEventType());
+            }
+            break;
+        case HELP:
+            log = new Log(elevatorID, event->getEventType(), NOTHING, IDLE);
+            break;
+        case CLOSE:
+            log = new Log(elevatorID, event->getEventType(), NOTHING, IDLE);
+            setLastAction(BOARDING);
+            break;
+
+    }
+    if (log)
+        logArr.push_back(log);
+
+}
+
+bool Elevator::isLastActionEvent(){
+    return (lastAction == OPEN || lastAction == OBSTACLE  || lastAction == OVERLOAD);
 }
 
 void Elevator::disembark(QVector<Person*>& disembarking){
@@ -169,6 +213,15 @@ bool Elevator::addtoQueue(int floorID, bool reversed){
 
 void Elevator::addPassenger(Person* person){
     passengers.push_back(person);
+}
+
+void Elevator::addEvent(SafetyEvent* event){
+    eventArr.push_back(event);
+}
+
+void Elevator::setLastAction(int action){
+    if (lastAction != EVACUATE)
+        lastAction = action;
 }
 
 //getters and setters

@@ -6,6 +6,7 @@
 #include "defs.h"
 #include "Log.h"
 #include "Person.h"
+#include "SafetyEvent.h"
 
 class Elevator{
   public:
@@ -23,22 +24,25 @@ class Elevator{
     void setCurFloorID(int);
     bool addFloorRequest(char, int);
     void addPassenger(Person*);
-    void addEvent(int);
+    void addEvent(SafetyEvent*);
+    void evacuate();             //move to safe floor if fire or power outage
 
   private:
-
     int elevatorID;
     int lastTimeStep;
     char direction;
     char requestDirection;
     int curFloorID;
+    int lastAction;
     QVector<Person*> passengers;
-    QVector<int> eventArr;
+    QVector<SafetyEvent*> eventArr;
     QVector<int> queue;          //queue of floor IDs
     QVector<Log*> logArr;
-    void evacuate(int);             //move to safe floor if fire or power outage
     bool addtoQueue(int, bool);
-    Log* respondToPerson(Person*, int);
+    void respondToPerson(Person*, int);
+    void respondToEvent(SafetyEvent*);
+    void setLastAction(int);
+    bool isLastActionEvent();
 
 };
 

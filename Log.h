@@ -15,7 +15,6 @@ class Log{
     int getID();
     int getAction();
     int getDirection();
-    void setDirection(char);
     static void clearLogs(QVector<Log*>&);
 
   private:

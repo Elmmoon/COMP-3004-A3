@@ -14,7 +14,8 @@ SOURCES += \
     Elevator.cpp \
     Floor.cpp \
     Log.cpp \
-    Person.cpp
+    Person.cpp \
+    SafetyEvent.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -22,7 +23,8 @@ HEADERS += \
     Elevator.h \
     Floor.h \
     Log.h \
-    Person.h
+    Person.h \
+    SafetyEvent.h
 
 FORMS += \
     mainwindow.ui
