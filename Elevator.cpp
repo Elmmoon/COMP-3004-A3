@@ -14,15 +14,15 @@ Elevator::~Elevator(){
     Log::clearLogs(logArr);
 }
 
-bool Elevator::act(int time){
-    int action = NOTHING;
+void Elevator::act(int time){
+    int action = IDLING;
     int floorID;
     char actionDirection;
     int personAction;
 
     //skip if already acted
     if (time == lastTimeStep)
-        return false;
+        return;
 
     floorID = curFloorID;
     lastTimeStep++;
@@ -63,13 +63,8 @@ bool Elevator::act(int time){
         }
     }
 
-    if (action != NOTHING)
-        logArr.push_back(new Log(elevatorID, action, floorID, actionDirection));
+    logArr.push_back(new Log(elevatorID, action, floorID, actionDirection));
     setLastAction(action);
-
-    //did any actions occur
-    return (action != NOTHING);
-
 }
 
 char Elevator::determineDirection(int curFloor, int destFloor){

@@ -38,13 +38,12 @@ void Floor::checkPerson(int time){
 }
 
 void Floor::checkElevator(int time){
-    bool logGenerated;
     QVector<Log*>* elevatorLogs = nullptr;
 
     for (auto it : elevatorArr){
-        logGenerated = it->act(time);
-        if (logGenerated){
-            elevatorLogs = it->getLogs();
+        it->act(time);
+        elevatorLogs = it->getLogs();
+        if (!elevatorLogs->empty()){
             respondToElevator(it, elevatorLogs->back());
             insertLogArr(*elevatorLogs);
         }
@@ -147,7 +146,6 @@ void Floor::respondToPerson(Person* person, int action){
                 break;
         }
     }
-
 }
 
 void Floor::respondToElevator(Elevator* elevator, Log* log){

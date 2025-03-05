@@ -9,7 +9,7 @@ Log::Log(int id, int act, int floor, char dir){
 }
 Log::~Log(){}
 
-QString Log::generateLog(){
+QString Log::generateDisplayLog(){
     QString str;
     QString directionString;
     QString block("           ");
@@ -27,7 +27,10 @@ QString Log::generateLog(){
             str.append(block).append(QString("*A passenger has requested a stop to floor %1").arg(floorID));
             break;
         case BOARDING:
-            str.append(block).append(QString("*Opens its doors, rings a bell, allows passengers to move and then close its doors"));
+            str.append(block).append("*Opens its doors, rings a bell, allows passengers to move and then close its doors");
+            break;
+        case IDLING:
+            str.append(block).append("*Idling");
             break;
         case MOVE:
             str.append(block).append(QString("*Moved %1 to floor %2").arg(directionString).arg(floorID));

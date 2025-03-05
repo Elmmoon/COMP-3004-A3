@@ -47,7 +47,7 @@ void MainWindow::start(){
     if (!isRunning){
         isRunning = true;
         curTimeStep = 0;
-        ui->timerDisplay->clear();
+        ui->timerDisplay->setText(QString::number(0));
         ui->logDisplay->setPlainText("Simulation Started\n");
         initParam();
         timer->start(LOOP_TIME);
@@ -68,10 +68,6 @@ void MainWindow::play(){
     }
 }
 
-void MainWindow::enterLine(){
-
-}
-
 void MainWindow::executeTimeStep(){
     QVector<QString> floorLogs;
 
@@ -80,14 +76,16 @@ void MainWindow::executeTimeStep(){
 
     for (auto it : eventQueue)
         distributeEvent(it);
+
     for (auto it : floorArr)
         it->checkEvent();
     for (auto it : floorArr)
         it->checkPerson(curTimeStep);
     for (auto it : floorArr)
         it->checkElevator(curTimeStep);
+
     for (auto it : eventLogArr)
-        ui->logDisplay->appendPlainText(it->generateLog());
+        ui->logDisplay->appendPlainText(it->generateDisplayLog());
     for (auto it : floorArr)
         displayLogs(it);
 
@@ -187,7 +185,7 @@ void MainWindow::displayLogs(Floor* floor){
                 ui->logDisplay->appendPlainText(QString("       Elevator %1:").arg(it->getID()));
                 lastID = it->getID();
             }
-            ui->logDisplay->appendPlainText(it->generateLog());
+            ui->logDisplay->appendPlainText(it->generateDisplayLog());
             delete it;
         }
     }
@@ -216,7 +214,6 @@ void MainWindow::addCloseEvent(){
         elevatorID = 2;
 
     addEventToQueue(CLOSE, elevatorID);
-
 }
 
 void MainWindow::addOpenEvent(){

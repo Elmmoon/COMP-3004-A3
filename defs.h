@@ -3,12 +3,13 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+//Imports
 #include <QString>
 #include <QVector>
-#include <QDebug>
 
-//Actions (use for Entity.act() and Log.action)
-#define NOTHING     0
+//Actions (Used for Log.action and Person.act())
+#define NOTHING     -1
+#define IDLING      0
 #define CALL        1
 #define MOVE        2
 #define REQUEST     3
@@ -17,7 +18,7 @@
 #define DOOR_CLOSE  6
 #define EVACUATE    7
 
-//Event Types (SafetyEvent.eventType)
+//Event Types (Used for SafetyEvent.eventType and Log.action)
 #define HELP        8
 #define OBSTACLE    9
 #define OVERLOAD    10
@@ -27,7 +28,7 @@
 #define FIRE        14
 #define REPEAT_OBS  15
 
-//Constant (miscellaneous definitions)
+//Constant (Miscellaneous definitions)
 #define UP          'U'
 #define DOWN        'D'
 #define IDLE        'I'
