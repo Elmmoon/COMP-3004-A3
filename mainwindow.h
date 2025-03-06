@@ -19,7 +19,7 @@ QT_END_NAMESPACE
  * Data Members:
  * -int isRunning: Is a simulation currently running
  * -int curTimeStep: The current time step
- * -QTimer* timer: The timer that maintains the intervals between each time step
+ * -QTimer* timstarr: The timer that maintains the intervals between each time step
  * -QVector<Person*> personArr: Vector of all people in the simulation
  * -QVector<Floor*> floorArr: Vector of all floors in the simulation
  * -QVector<Elevator*> elevatorArr: Vector of all elevators in the simulation
@@ -31,22 +31,22 @@ QT_END_NAMESPACE
  * -void distributeEvent(SafetyEvent*): Distributes the event to the corresponding floors/elevator
  * -void clearArr(): Clears the vectors and deallocates their memory
  * -void initParam(): Initializes all of the simulatione entities
- * void displayLogs(Floor*): Displays the logs for the corresponding floor
- * bool allPassengersArrived(): Determines if all passengers have arrived to their destintations
+ * -void displayLogs(Floor*): Displays the logs for the corresponding floor
+ * -bool allPassengersArrived(): Determines if all passengers have arrived to their destintations
  *
  * Slot Functions:
- * void start(): Starts the simulation
- * void pause(): Pauses the simulation
- * void play(): Resumes the simulation
- * void executeTimeStep(): Executes the next time step
- * void endProgram(): Ends the current simulation
- * void addCloseEvent(): Adds a close door event to eventQueue
- * void addOpenEvent(): Adds an open door event to eventQueue
- * void addHelpEvent(): Adds a help button event to eventQueue
- * void addOverloadEvent(): Adds an overload event to eventQueue
- * void addObstacleEvent(): Adds an obstacle event to eventQueue
- * void addFireEvent(): Adds a fire event to eventQueue
- * void addPowerEvent(): Adds a power outage event to eventQueue
+ * -void start(): Starts the simulation
+ * -void pause(): Pauses the simulation
+ * -void play(): Resumes the simulation
+ * -void executeTimeStep(): Executes the next time step
+ * -void endProgram(): Ends the current simulation
+ * -void addCloseEvent(): Adds a close door event to eventQueue
+ * -void addOpenEvent(): Adds an open door event to eventQueue
+ * -void addHelpEvent(): Adds a help button event to eventQueue
+ * -void addOverloadEvent(): Adds an overload event to eventQueue
+ * -void addObstacleEvent(): Adds an obstacle event to eventQueue
+ * -void addFireEvent(): Adds a fire event to eventQueue
+ * -void addPowerEvent(): Adds a power outage event to eventQueue
  */
 
 class MainWindow : public QMainWindow

@@ -34,7 +34,7 @@
  * -void respondToPerson(Person*, int): Performs actions in response to a person's actions
  * -void respondToElevator(Elevator*): Performs actions in response to the elevator's actions
  * -void insertLogArr(QVector<Log*>&): Inserts a vector of logs into logArr in order
- * -void insertLog(Log*); Wrapper for insertLogArr(QVector<Log*>&) to insert a single log
+ * -void insertLog(Log*): Wrapper for insertLogArr(QVector<Log*>&) to insert a single log
  */
 
 class Floor{
